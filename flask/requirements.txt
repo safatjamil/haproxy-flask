@@ -1,0 +1,8 @@
+bcrypt
+cryptography
+flask
+flask-RESTful
+pyyaml
+requests
+toml
+

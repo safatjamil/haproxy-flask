@@ -1,0 +1,81 @@
+version: "3.8"
+name: haproxy-flask
+
+networks:
+  frontend:
+    ipam:
+      driver: default
+      config:
+        - subnet: ${frontend}
+          gateway: ${front_gateway}
+  backend:
+    ipam:
+      driver: default
+      config:
+        - subnet: ${backend}
+
+configs:
+  haproxy_main_conf:
+    file: ./haproxy/haproxy.cfg
+  host_conf_file:
+    file: ./haproxy/hosts
+services:
+  haproxy:
+    image: haproxy:3.0-dev
+    container_name: haproxy
+    configs:
+      - source: haproxy_main_conf
+        target: /usr/local/etc/haproxy/haproxy.cfg
+        mode: 0644
+      - source: host_conf_file
+        target: /etc/hosts
+        mode: 0644
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+    networks:
+      frontend:
+      backend:
+        ipv4_address: ${haproxy_backend}
+    
+  server_london:
+    image: flask:v1
+    container_name: server_london
+    depends_on:
+      - haproxy
+    environment:
+      - TZ=Europe/London
+    hostname: server-europe-london
+    networks:
+      frontend: 
+      backend:
+        ipv4_address: ${server_london_backend}
+    command: ["flask", "run"]
+  
+  server_dhaka:
+    image: flask:v1
+    container_name: server_dhaka
+    depends_on:
+      - haproxy
+    environment:
+      - TZ=Asia/Dhaka
+    networks:
+      frontend:
+      backend:
+        ipv4_address: ${server_dhaka_backend}
+    command: ["flask", "run"]
+  
+  server_dubai:
+    image: flask:v1
+    container_name: server_dubai
+    depends_on:
+      - haproxy
+    environment:
+      - TZ=Asia/Dubai
+    networks:
+      frontend:
+      backend:
+        ipv4_address: ${server_dubai_backend}
+    command: ["flask", "run"] 

@@ -1,0 +1,5 @@
+127.0.0.1	localhost
+::1     ip6-localhost ip6-loopback
+172.19.9.20     server_london
+172.19.9.30     server_dhaka
+172.19.9.40     server_dubai
