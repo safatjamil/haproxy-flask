@@ -7,7 +7,6 @@ networks:
       driver: default
       config:
         - subnet: ${frontend}
-          gateway: ${front_gateway}
   backend:
     ipam:
       driver: default
