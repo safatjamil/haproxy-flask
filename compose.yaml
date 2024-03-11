@@ -25,10 +25,8 @@ services:
     configs:
       - source: haproxy_main_conf
         target: /usr/local/etc/haproxy/haproxy.cfg
-        mode: 0644
       - source: host_conf_file
         target: /etc/hosts
-        mode: 0644
     ports:
       - target: 80
         published: 80
